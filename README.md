@@ -35,4 +35,4 @@ The project includes three datasets:
 
 ## Author
 Azhar Mehmood  
-Business Analytics StudentA
+Business Analytics Student
