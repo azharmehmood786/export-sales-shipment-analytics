@@ -18,18 +18,14 @@ customers and shipment performance using Python, Pandas, SQLite and SQL.
 
 ## Key Performance Indicators
 
-### 1. Total Export Volume
-**Formula:** SUM(Quantity) for Export Orders
+1. Total Export Volume:
+   SUM(quantity) WHERE order_type = 'Export'
 
-Measures the total number of product units exported.
+2. Average Order Value:
+   SUM(total_amount_usd) / COUNT(order_id)
+   WHERE order_type = 'Export'
 
-### 2. Average Order Value
-**Formula:** Total Export Revenue / Number of Export Orders
-
-Measures the average monetary value of each export order.
-
-### 3. On-Time Shipment Rate
-**Formula:** (On-Time Export Shipments / Total Export Shipments) * 100
-
-Measures the percentage of export shipments delivered on or before the promised date.
-
+3. On-Time Shipment Rate:
+   (On-Time Export Shipments / Total Shipped Export Orders) * 100
+   WHERE order_type = 'Export'
+   AND actual_ship_date IS NOT NULL
