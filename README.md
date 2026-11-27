@@ -1,66 +1,44 @@
 # Export Business Analytics
 
 ## Project Overview
-Analysis of export business orders, products, customers, and shipment performance using Python, Pandas, SQLite, and SQL.
+
+An end-to-end export analytics project to analyze export orders, products, customers, and shipment performance using Python, Pandas, SQLite, and SQL.
 
 ## Dataset
+
+- Orders
 - Products
 - Customers
-- Orders
 - Dates
 
 ## Tools
+
 - Python
 - Pandas
 - NumPy
 - SQLite
 - SQL
 - Jupyter Notebook
+- GitHub
 
 ## Key Performance Indicators
 
 ### 1. Total Export Volume
+Measures the total quantity of products exported.
 
-**Business Question:** How many units of products were exported?
+**Formula:** `SUM(quantity)` where `order_type = 'Export'`
 
-**Formula:**
-```sql
-SUM(quantity)
-WHERE order_type = 'Export'
-```
+### 2. Average Order Value (AOV)
+Measures the average sales value per export order.
 
-### 2. Average Order Value
-
-**Business Question:** What is the average value of export orders?
-
-**Formula:**
-```sql
-AVG(total_amount_usd)
-WHERE order_type = 'Export'
-```
+**Formula:** `AVG(total_amount_usd)` where `order_type = 'Export'`
 
 ### 3. On-Time Shipment Rate
+Measures the percentage of export orders shipped on or before the promised date.
 
-**Business Question:** What percentage of shipped export orders were shipped on time?
-
-**Formula:**
-```sql
-ROUND(
-    100.0 * SUM(
-        CASE
-            WHEN actual_ship_date <= promised_ship_date
-            THEN 1 ELSE 0
-        END
-    ) / COUNT(order_id),
-    2
-)
-WHERE order_type = 'Export'
-AND actual_ship_date IS NOT NULL
-```
+**Formula:** `(On-Time Orders / Total Shipped Orders) * 100`
 
 ## Dataset Files and Row Counts
-
-The `/data` folder contains:
 
 | File Name | Rows |
 |---|---:|
@@ -71,27 +49,43 @@ The `/data` folder contains:
 
 ## SQLite Database
 
-The `exports.db` file is located in the repository root.
+The `exports.db` database is located in the repository root.
 
-It contains three tables:
-- orders
-- products
-- customers
+It contains the following star schema tables:
+
+- DimProduct
+- DimCustomer
+- DimDate
+- FactExportOrders
+- monthly_export_summary
+
+## Monthly Export Summary
+
+The monthly summary includes:
+
+- Total Export Volume
+- Average Order Value
+- Previous Month Export Volume
+
+The results are also exported to `monthly_export_summary.csv`.
 
 ## Project Structure
 
 ```text
-Export-Business-Analytics/
+export-sales-shipment-analytics/
 ├── data/
 │   ├── Orders.csv
 │   ├── Products.csv
 │   ├── Customers.csv
 │   └── Dates.csv
 ├── sql/
-│   ├── kpi_total_export_volume.sql
-│   ├── kpi_average_order_value.sql
-│   └── kpi_on_time_shipment_rate.sql
+├── star_schema/
+│   ├── 01_create_star_schema.sql
+│   ├── 02_monthly_export_summary.sql
+│   ├── 03_check_negative_quantity.sql
+│   └── 04_check_null_foreign_keys.sql
+├── KPI_Definitions.md
+├── monthly_export_summary.csv
 ├── analysis.ipynb
 ├── exports.db
 └── README.md
-```
