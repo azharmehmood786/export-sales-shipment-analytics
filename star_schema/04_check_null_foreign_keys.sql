@@ -1,13 +1,21 @@
+import sqlite3
+import sys
 
-CREATE TEMP TABLE dq_fk_check (
-    result INTEGER CHECK (result = 1)
-);
+conn = sqlite3.connect("exports.db")
 
-INSERT INTO dq_fk_check
-SELECT CASE
-    WHEN COUNT(*) = 0 THEN 1
-    ELSE 0
-END
+query = """
+SELECT COUNT(*)
 FROM FactExportOrders
 WHERE customer_id IS NULL
-   OR product_id IS NULL;
+   OR product_id IS NULL
+   OR order_date IS NULL;
+"""
+
+count = conn.execute(query).fetchone()[0]
+conn.close()
+
+if count > 0:
+    print(f"ERROR: {count} rows have NULL foreign keys!")
+    sys.exit(1)
+else:
+    print("PASS: No NULL foreign keys found.")
