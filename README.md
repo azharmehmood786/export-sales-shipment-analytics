@@ -32,6 +32,7 @@ The project uses four datasets:
 Measures the total quantity of products exported.
 
 **Formula:**
+
 `SUM(quantity)` where `order_type = 'Export'`
 
 ### 2. Average Order Value (AOV)
@@ -39,6 +40,7 @@ Measures the total quantity of products exported.
 Measures the average sales value per export order.
 
 **Formula:**
+
 `AVG(total_amount_usd)` where `order_type = 'Export'`
 
 ### 3. On-Time Shipment Rate
@@ -46,6 +48,7 @@ Measures the average sales value per export order.
 Measures the percentage of export orders shipped on or before the promised date.
 
 **Formula:**
+
 `(On-Time Orders / Total Shipped Orders) * 100`
 
 ## Dataset Files and Row Counts
@@ -78,7 +81,7 @@ Two data quality checks are implemented:
 1. **Negative Quantity Check:** Identifies records with negative quantities.
 2. **NULL Foreign Key Check:** Identifies records with missing `customer_id`, `product_id`, or `order_date`.
 
-Python validation checks the results and uses `sys.exit(1)` to stop execution if either check fails.
+Python validation uses `sys.exit(1)` to stop execution if either check fails.
 
 Both checks passed during validation.
 
@@ -90,7 +93,7 @@ The monthly export summary includes:
 - Average Order Value
 - Previous Month Export Volume
 
-The SQL query uses a Common Table Expression (CTE) and the `LAG()` window function to calculate previous month's export volume.
+The SQL query uses a Common Table Expression (CTE) and the `LAG()` window function to calculate the previous month's export volume.
 
 The results are exported to `monthly_export_summary.csv`.
 
@@ -106,6 +109,9 @@ export-sales-shipment-analytics/
 │   └── Dates.csv
 │
 ├── sql/
+│   ├── kpi_average_order_value.sql
+│   ├── kpi_on_time_shipment_rate.sql
+│   └── kpi_total_export_volume.sql
 │
 ├── star_schema/
 │   ├── 01_create_star_schema.sql
