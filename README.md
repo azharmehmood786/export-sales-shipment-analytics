@@ -40,12 +40,12 @@ Measures the percentage of export orders shipped on or before the promised date.
 
 ## Dataset Files and Row Counts
 
-| File Name | Rows |
-|---|---:|
-| Orders.csv | 500 |
-| Products.csv | 4 |
-| Customers.csv | 20 |
-| Dates.csv | Pending verification |
+| **File Name** | **Rows** |
+|---------------|----------|
+| Orders.csv    | 500      |
+| Products.csv  | 4        |
+| Customers.csv | 20       |
+| Dates.csv     | 500      |
 
 ## SQLite Database
 
