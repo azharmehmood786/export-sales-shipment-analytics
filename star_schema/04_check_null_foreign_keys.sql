@@ -1,21 +1,21 @@
-import sqlite3
-import sys
+-- Data Quality Check: NULL Foreign Keys
 
-conn = sqlite3.connect("exports.db")
+CREATE TEMP TABLE dq_null_check (id INTEGER);
 
-query = """
-SELECT COUNT(*)
-FROM FactExportOrders
-WHERE customer_id IS NULL
-   OR product_id IS NULL
-   OR order_date IS NULL;
-"""
+CREATE TEMP TRIGGER check_null_foreign_keys
+BEFORE INSERT ON dq_null_check
+WHEN EXISTS (
+    SELECT 1
+    FROM FactExportOrders
+    WHERE customer_id IS NULL
+       OR product_id IS NULL
+       OR order_date IS NULL
+)
+BEGIN
+    SELECT RAISE(ABORT, 'ERROR: NULL foreign keys found!');
+END;
 
-count = conn.execute(query).fetchone()[0]
-conn.close()
+INSERT INTO dq_null_check VALUES (1);
 
-if count > 0:
-    print(f"ERROR: {count} rows have NULL foreign keys!")
-    sys.exit(1)
-else:
-    print("PASS: No NULL foreign keys found.")
+DROP TRIGGER check_null_foreign_keys;
+DROP TABLE dq_null_check;
