@@ -1,4 +1,7 @@
-sql = """
+
+-- Enable Foreign Key constraints in SQLite
+PRAGMA foreign_keys = ON;
+
 -- 1. Product Dimension
 CREATE TABLE IF NOT EXISTS DimProduct (
     product_id INTEGER PRIMARY KEY,
@@ -39,13 +42,19 @@ CREATE TABLE IF NOT EXISTS FactExportOrders (
     total_amount_usd REAL,
     order_type TEXT,
 
-    FOREIGN KEY (customer_id) REFERENCES DimCustomer(customer_id),
-    FOREIGN KEY (product_id) REFERENCES DimProduct(product_id),
-    FOREIGN KEY (order_date) REFERENCES DimDate(date),
-    FOREIGN KEY (promised_ship_date) REFERENCES DimDate(date),
-    FOREIGN KEY (actual_ship_date) REFERENCES DimDate(date)
-);
-"""
+    FOREIGN KEY (customer_id)
+        REFERENCES DimCustomer(customer_id),
 
-conn.executescript(sql)
-conn.commit()
+    FOREIGN KEY (product_id)
+        REFERENCES DimProduct(product_id),
+
+    FOREIGN KEY (order_date)
+        REFERENCES DimDate(date),
+
+    FOREIGN KEY (promised_ship_date)
+        REFERENCES DimDate(date),
+
+    FOREIGN KEY (actual_ship_date)
+        REFERENCES DimDate(date)
+);
+
