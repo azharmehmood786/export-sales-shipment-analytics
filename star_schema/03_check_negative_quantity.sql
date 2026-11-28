@@ -1,22 +1,19 @@
-import sys
-import sqlite3
+-- Data Quality Check: Negative Quantity
 
-conn = sqlite3.connect("exports.db")
+CREATE TEMP TABLE dq_negative_check (id INTEGER);
 
-cursor = conn.cursor()
+CREATE TEMP TRIGGER check_negative_quantity
+BEFORE INSERT ON dq_negative_check
+WHEN EXISTS (
+    SELECT 1
+    FROM FactExportOrders
+    WHERE quantity < 0
+)
+BEGIN
+    SELECT RAISE(ABORT, 'ERROR: Negative quantities found!');
+END;
 
-cursor.execute("""
-SELECT COUNT(*)
-FROM FactExportOrders
-WHERE quantity < 0;
-""")
+INSERT INTO dq_negative_check VALUES (1);
 
-count = cursor.fetchone()[0]
-
-if count > 0:
-    print("ERROR: Negative quantities found!")
-    sys.exit(1)
-else:
-    print("PASS: No negative quantities found.")
-
-conn.close()
+DROP TRIGGER check_negative_quantity;
+DROP TABLE dq_negative_check;
