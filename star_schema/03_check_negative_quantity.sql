@@ -1,12 +1,22 @@
+import sys
+import sqlite3
 
-CREATE TEMP TABLE dq_check (
-    result INTEGER CHECK (result = 1)
-);
+conn = sqlite3.connect("exports.db")
 
-INSERT INTO dq_check
-SELECT CASE
-    WHEN COUNT(*) = 0 THEN 1
-    ELSE 0
-END
+cursor = conn.cursor()
+
+cursor.execute("""
+SELECT COUNT(*)
 FROM FactExportOrders
-WHERE quantity <= 0;
+WHERE quantity < 0;
+""")
+
+count = cursor.fetchone()[0]
+
+if count > 0:
+    print("ERROR: Negative quantities found!")
+    sys.exit(1)
+else:
+    print("PASS: No negative quantities found.")
+
+conn.close()
